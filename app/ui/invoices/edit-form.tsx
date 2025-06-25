@@ -1,5 +1,7 @@
 'use client';
 
+import { useActionState } from 'react';
+import { updateInvoice,State } from '@/app/lib/actions';
 import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
 import {
   CheckIcon,
@@ -17,8 +19,12 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
-  return (
-    <form>
+    
+  const initialState: State = { message: null, errors: {} };
+   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+   const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
+ 
+  return <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
@@ -97,6 +103,7 @@ export default function EditInvoiceForm({
                   value="paid"
                   defaultChecked={invoice.status === 'paid'}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  
                 />
                 <label
                   htmlFor="paid"
@@ -119,5 +126,5 @@ export default function EditInvoiceForm({
         <Button type="submit">Edit Invoice</Button>
       </div>
     </form>
-  );
+  
 }
